@@ -1,0 +1,93 @@
+{% load staticfiles %}
+{% load mathfilters %}
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Ynvo</title>
+        <link rel="stylesheet" type="text/css"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+              crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css"
+              href="{% static 'ynvo/css/style.css' %}">
+    </head>
+    <body>
+        <div class="container">
+            <div class="invoice">
+                <div>
+                    <h4>
+                        Factura no. {{ ynvo.number_wadobo }}
+                    </h4>
+                    <span>{{ ynvo.created }}</span>
+                </div>
+            </div>
+            <div class="personal-data">
+                <div class="transmitter">
+                    <b>{{ ynvo.invo_from.name }}</b>
+                    NIF: {{ ynvo.invo_from.vat }}
+                    {{ ynvo.invo_from.address }}
+                    {{ ynvo.invo_from.zipcode }}, {{ ynvo.invo_from.city }}
+                    {{ ynvo.invo_from.user.email }}
+                </div>
+                <div class="client">
+                    <span>CLIENTE</span>
+
+                    <b>{{ ynvo.invo_to.name }}</b>
+                    CIF: {{ ynvo.invo_to.vat }}
+                    {{ ynvo.invo_to.address }}
+                    {{ ynvo.invo_to.zipcode }}, {{ ynvo.invo_to.city }}
+                </div>
+            </div>
+            <p><b>{{ ynvo.project }}</b></p>
+            <table class="fees">
+                <thead>
+                  <tr class="text-center">
+                    <th>Actividad</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Total ({{ ynvo.currency }})</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for fee in ynvo.fees.all %}
+                  <tr>
+                      <td>{{ fee.activity }}</td>
+                      <td class="text-right">{{ fee.price|floatformat:2 }}</td>
+                      <td class="text-right">{{ fee.amount }}</td>
+                      <td class="text-right">{{ fee.price|mul:fee.amount|floatformat:2 }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+
+            <table class="totals">
+                <tbody>
+                  {% for tag, name, value in ynvo.get_totals %}
+                  <tr class="{{ tag }}">
+                      <td>{{ name }}</td>
+                      <td class="text-right">{{ value|floatformat:2 }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+            <div class="payment">
+                {{ ynvo.invo_from.payment }}
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+                integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                crossorigin="anonymous">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous">
+        </script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous">
+        </script>
+    </body>
+</html>

@@ -1,0 +1,75 @@
+@media print {
+    body {
+        size: auto;
+        margin: 20mm;
+    }
+}
+
+body {
+    margin: 0px;
+}
+
+.personal-data {
+    margin: 40px 0px 40px 0px;
+    border-top: solid 1px gray;
+    display: flex;
+    width: 98%;
+}
+
+.transmitter, .client, .payment {
+    white-space: pre-line;
+    padding-left: 10px;
+}
+
+.transmitter {
+    border-right: solid 1px grey;
+    padding-right: 10px;
+    width: 40%;
+}
+
+.client {
+    width: 60%;
+    margin-top: -3em;
+}
+
+/* TABLE */
+table.fees {
+    white-space: nowrap;
+    margin-bottom: 30px;
+    width: 98%;
+}
+
+table.totals {
+    width: 98%;
+}
+
+table.fees th, table.fees td, table.totals td {
+    padding-left: 10px;
+    padding-right: 10px;
+
+}
+
+table, th, td, thead {
+  border: 1px solid black;
+}
+
+table.fees thead {
+    background-color: lightgray;
+}
+
+tr.subtotal {
+    background-color: #eaffea;
+}
+
+tr.tax {
+    background-color: #eaffea;
+}
+
+tr.reverse-tax {
+    background-color: #ffeaea;
+}
+
+tr.total {
+    background-color: #baffba;
+    font-weight: bold;
+}

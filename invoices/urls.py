@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from ynvo.views import YnvoView
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('ynvo/<int:pk>/', YnvoView.as_view(), name='ynvo_view'),
 ]

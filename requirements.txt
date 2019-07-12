@@ -1,0 +1,7 @@
+Django==2.2.1
+WeasyPrint==47
+cairocffi==1.0.2
+django-mathfilters==0.4.0
+django-weasyprint==0.5.4
+django-wkhtmltopdf==3.2.0
+ipdb==0.11
