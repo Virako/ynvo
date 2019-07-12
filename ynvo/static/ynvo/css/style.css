@@ -16,7 +16,7 @@ body {
     width: 98%;
 }
 
-.transmitter, .client, .payment {
+.transmitter, .client, .payment, .note {
     white-space: pre-line;
     padding-left: 10px;
 }
@@ -70,6 +70,12 @@ tr.reverse-tax {
 }
 
 tr.total {
+    background-color: #baffba;
+    font-weight: bold;
+}
+
+tr.extra-total {
+    margin-top: 10px;
     background-color: #baffba;
     font-weight: bold;
 }

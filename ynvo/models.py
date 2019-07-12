@@ -59,10 +59,13 @@ class Invoice(models.Model):
     fees = models.ManyToManyField(Fee, related_name='invoices')
     project = models.CharField(max_length=128, default='', blank=True)
     currency = models.CharField(max_length=4, default='€')
+    extra_currency = models.CharField(max_length=4, blank=True, null=True)
+    currency_exchange = models.FloatField(default=1.0)
     tax = models.IntegerField(default=21)
     taxname = models.CharField(max_length=16, default='IVA')
     reverse_tax = models.IntegerField(default=15)
     reverse_taxname = models.CharField(max_length=16, default='IRPF')
+    note = models.TextField(blank=True, null=True)
     created = models.DateField(auto_now_add=True, blank=True, null=True)
     paid = models.DateField(blank=True, null=True)
 
@@ -84,7 +87,12 @@ class Invoice(models.Model):
         if self.reverse_tax:
             name = '{} ({}%)'.format(self.reverse_taxname, self.reverse_tax)
             res.append(['reverse-tax', name, t_reverse_tax])
-        res.append(['total', 'TOTAL', total])
+        if self.extra_currency:
+            res.append(['total', 'TOTAL ({})'.format(self.currency), total])
+            res.append(['extra-total', 'TOTAL ({}) *'.format(self.extra_currency),
+                       total * self.currency_exchange])
+        else:
+            res.append(['total', 'TOTAL', total])
         return res
 
     def number_wadobo(self):

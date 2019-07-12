@@ -73,8 +73,13 @@
                   {% endfor %}
                 </tbody>
             </table>
+
             <div class="payment">
                 {{ ynvo.invo_from.payment }}
+            </div>
+            <br>
+            <div class="note">
+                {{ ynvo.note|default_if_none:'' }}
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
