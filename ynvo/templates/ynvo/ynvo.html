@@ -19,7 +19,11 @@
             <div class="invoice">
                 <div>
                     <h4>
-                        Factura no. {{ ynvo.number_wadobo }}
+                        {% if ynvo.proforma %}
+                            Factura proforma
+                        {% else %}
+                            Factura no. {{ ynvo.number_wadobo }}
+                        {% endif %}
                     </h4>
                     <span>{{ ynvo.created }}</span>
                 </div>
@@ -75,7 +79,9 @@
             </table>
 
             <div class="payment">
-                {{ ynvo.invo_from.payment }}
+                {% if not ynvo.proforma %}
+                    {{ ynvo.invo_from.payment }}
+                {% endif %}
             </div>
             <br>
             <div class="note">

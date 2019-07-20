@@ -68,6 +68,7 @@ class Invoice(models.Model):
     note = models.TextField(blank=True, null=True)
     created = models.DateField(auto_now_add=True, blank=True, null=True)
     paid = models.DateField(blank=True, null=True)
+    proforma = models.BooleanField(default=False)
 
     def get_totals(self):
         subtotal = 0
