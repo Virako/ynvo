@@ -27,7 +27,6 @@ class FeeAdmin(admin.ModelAdmin):
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display = ('prefix', 'number', 'year', 'invo_from', 'invo_to',
-                    'project', 'currency', 'tax', 'taxname', 'reverse_tax',
-                    'reverse_taxname', 'proforma', 'created', 'paid')
+    list_display = ('prefix', 'number', 'year', 'total', 'currency', 'invo_to',
+                    'project', 'proforma', 'created', 'paid')
     filter_horizontal = ('fees',)

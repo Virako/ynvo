@@ -66,7 +66,8 @@ class Invoice(models.Model):
     reverse_tax = models.IntegerField(default=15)
     reverse_taxname = models.CharField(max_length=16, default='IRPF')
     note = models.TextField(blank=True, null=True)
-    created = models.DateField(auto_now_add=True, blank=True, null=True)
+    created = models.DateField(auto_now_add=True, blank=True, null=True,
+            editable=True)
     paid = models.DateField(blank=True, null=True)
     proforma = models.BooleanField(default=False)
 
@@ -95,6 +96,11 @@ class Invoice(models.Model):
         else:
             res.append(['total', 'TOTAL', total])
         return res
+
+    @property
+    def total(self):
+        total = self.get_totals()[-1][2]
+        return round(total, 2)
 
     def number_wadobo(self):
         return '{}/{:03d}'.format(self.year, self.number)
