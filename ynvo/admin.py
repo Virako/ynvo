@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
 from .models import (
     Client,
@@ -27,6 +28,9 @@ class FeeAdmin(admin.ModelAdmin):
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display = ('prefix', 'number', 'year', 'total', 'currency', 'invo_to',
-                    'project', 'proforma', 'created', 'paid')
+    list_display = ('number', 'proforma', 'year', 'total', 'currency', 'invo_to',
+                    'project', 'created', 'paid', 'pdf_url')
     filter_horizontal = ('fees',)
+
+    def pdf_url(self, obj):
+        return format_html('<a target="_blank" href="/ynvo/{}/">GEN</a>', obj.number)
