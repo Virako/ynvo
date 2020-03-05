@@ -15,5 +15,5 @@ class YnvoView(WeasyTemplateResponseMixin, TemplateView):
     def get_context_data(self, **kwargs):
         self.pk = kwargs.get('pk', None)
         context = super().get_context_data(**kwargs)
-        context['ynvo'] = Invoice.objects.get(number=self.pk)
+        context['ynvo'] = Invoice.objects.filter(number=self.pk).order_by('year').last()
         return context

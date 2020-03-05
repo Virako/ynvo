@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 
 
@@ -52,7 +53,7 @@ class Invoice(models.Model):
     )
 
     prefix = models.CharField(max_length=32, blank=True, null=True)
-    number = models.PositiveIntegerField()
+    number = models.PositiveIntegerField(blank=True)
     year = models.PositiveIntegerField(blank=True, null=True)
     invo_from = models.ForeignKey(Transmitter, on_delete=models.PROTECT)
     invo_to = models.ForeignKey(Client, on_delete=models.PROTECT)
@@ -66,8 +67,7 @@ class Invoice(models.Model):
     reverse_tax = models.IntegerField(default=15)
     reverse_taxname = models.CharField(max_length=16, default='IRPF')
     note = models.TextField(blank=True, null=True)
-    created = models.DateField(auto_now_add=True, blank=True, null=True,
-            editable=True)
+    created = models.DateField(editable=True, blank=True)
     paid = models.DateField(blank=True, null=True)
     proforma = models.BooleanField(default=False)
 
@@ -105,6 +105,15 @@ class Invoice(models.Model):
     def number_wadobo(self):
         return '{}/{:03d}'.format(self.year, self.number)
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            now = timezone.now()
+            self.created = now
+            self.year = now.year
+            last_number = Invoice.objects.filter(year=self.year).order_by('-number').values_list('number', flat=True)[0]
+            self.number = last_number + 1
+        return super().save(*args, **kwargs)
+
     def __str__(self):
         res = ''
         if self.prefix:
@@ -113,3 +122,6 @@ class Invoice(models.Model):
         if self.year:
             res += ' / ' + str(self.year)
         return res
+
+    class Meta:
+        ordering = ('-number',)

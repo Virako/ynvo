@@ -31,6 +31,8 @@ class InvoiceAdmin(admin.ModelAdmin):
     list_display = ('number', 'proforma', 'year', 'total', 'currency', 'invo_to',
                     'project', 'created', 'paid', 'pdf_url')
     filter_horizontal = ('fees',)
+    list_filter = ('invo_to', 'year')
+    date_hierarchy = 'created'
 
     def pdf_url(self, obj):
         return format_html('<a target="_blank" href="/ynvo/{}/">GEN</a>', obj.number)
