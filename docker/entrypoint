@@ -2,7 +2,7 @@
 
 if [ "$1" = 'admin' ]; then
     cd /app
-    daphne config.asgi:application -b 0.0.0.0 -p 8000
+    daphne invoices.asgi:application -b 0.0.0.0 -p 8000
 elif [ "$1" = 'migrate' ]; then
     cd /app
     python manage.py migrate
