@@ -125,7 +125,6 @@ class TaskInline(admin.TabularInline):
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ("name", "client")
     list_filter = [ClientFilter]
-    exclude = ("client",)
     show_full_result_count = False
     inlines = [TaskInline]
 
@@ -136,15 +135,8 @@ class ProjectAdmin(admin.ModelAdmin):
         return (
             super()
             .get_queryset(request)
-            # .with_transmitter()
             .filter(client__transmitter__user=request.user)
         )
-
-    def save_model(self, request, obj, form, change):
-        if not change:  # only set the transmitter when the object is created
-            client = Client.objects.get(transmitter__user=request.user)
-            obj.client = client
-        super().save_model(request, obj, form, change)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "client" and not request.user.is_superuser:
@@ -166,7 +158,7 @@ class CommentInline(admin.TabularInline):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ("name", "project")
+    list_display = ("name", "project", "status", "deadline", "priority")
     list_filter = [ProjectFilter, "status", "deadline"]
     show_full_result_count = False
     inlines = [WorkInline, CommentInline]
