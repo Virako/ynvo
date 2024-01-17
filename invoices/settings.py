@@ -18,6 +18,16 @@ def env_list(env_name, default=list):
     return list_vars.split(",") if list_vars else default
 
 
+def env_get_admins():
+    """ Example: Foo:foo@test.com,Bar:bar@test.com """
+    res = list()
+    list_vars = os.environ.get('ADMINS', '')
+    admins = list_vars.split(',') if list_vars else list()
+    for adm in admins:
+        res.append(tuple(adm.split(':')))
+    return tuple(res)
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -33,6 +43,7 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", [])
 
+ADMINS = env_get_admins()
 
 # Application definition
 
