@@ -44,6 +44,7 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", [])
 
 ADMINS = env_get_admins()
+MANAGERS = ADMINS
 
 # Application definition
 
@@ -156,6 +157,7 @@ CSRF_COOKIE_SAMESITE = os.environ.get("CSRF_COOKIE_SAMESITE", "strict")
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", [])
 
 # EMAIL
+SERVER_EMAIL = os.environ.get("SERVER_EMAIL", "root@localhost")
 EMAIL_BACKEND = os.environ.get(
     "EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend"
 )
