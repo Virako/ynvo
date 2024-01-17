@@ -120,11 +120,14 @@ class Invoice(models.Model):
             self.created = now
             self.year = now.year
             if not self.number:
-                last_number = (
-                    Invoice.objects.filter(year=self.year)
-                    .order_by("-number")
-                    .values_list("number", flat=True)[0]
-                ) or 0
+                try:
+                    last_number = (
+                        Invoice.objects.filter(year=self.year)
+                        .order_by("-number")
+                        .values_list("number", flat=True)[0]
+                    ) or 0
+                except Exception:
+                    last_number = 0
                 self.number = last_number + 1
         return super().save(*args, **kwargs)
 
