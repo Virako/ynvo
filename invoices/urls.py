@@ -23,7 +23,7 @@ from ynvo.views import YnvoView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("ynvo/<int:pk>/", YnvoView.as_view(), name="ynvo_view"),
+    path("ynvo/<int:year>/<str:number>/", YnvoView.as_view(), name="ynvo_view"),
 ]
 
 if settings.DEBUG:

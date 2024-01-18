@@ -67,8 +67,7 @@ class FeeAdmin(admin.ModelAdmin):
             return super().get_queryset(request)
 
         return (
-            super()
-            .get_queryset(request)
+            super().get_queryset(request)
             # .with_transmitter()
             .filter(invoice__invo_from__user=request.user)
         )
@@ -100,7 +99,9 @@ class InvoiceAdmin(admin.ModelAdmin):
     exclude = ("invo_from",)
 
     def pdf_url(self, obj):
-        return format_html('<a target="_blank" href="/ynvo/{}/">GEN</a>', obj.number)
+        return format_html(
+            f"<a target='_blank' href='/ynvo/{obj.year}/{obj.number}/'>GEN</a>"
+        )
 
     def get_queryset(self, request):
         if request.user.is_superuser:
@@ -133,9 +134,7 @@ class ProjectAdmin(admin.ModelAdmin):
             return super().get_queryset(request)
 
         return (
-            super()
-            .get_queryset(request)
-            .filter(client__transmitter__user=request.user)
+            super().get_queryset(request).filter(client__transmitter__user=request.user)
         )
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -168,8 +167,7 @@ class TaskAdmin(admin.ModelAdmin):
             return super().get_queryset(request)
 
         return (
-            super()
-            .get_queryset(request)
+            super().get_queryset(request)
             # .with_transmitter()
             .filter(project__client__transmitter__user=request.user)
         )
@@ -186,8 +184,7 @@ class CommentAdmin(admin.ModelAdmin):
             return super().get_queryset(request)
 
         return (
-            super()
-            .get_queryset(request)
+            super().get_queryset(request)
             # .with_transmitter()
             .filter(task__project__client__transmitter__user=request.user)
         )
@@ -204,8 +201,7 @@ class WorkAdmin(admin.ModelAdmin):
             return super().get_queryset(request)
 
         return (
-            super()
-            .get_queryset(request)
+            super().get_queryset(request)
             # .with_transmitter()
             .filter(task__project__client__transmitter__user=request.user)
         )

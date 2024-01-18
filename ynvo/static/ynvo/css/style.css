@@ -1,7 +1,7 @@
 @media print {
     body {
         size: auto;
-        margin: 20mm;
+        margin: 10mm;
     }
 }
 
