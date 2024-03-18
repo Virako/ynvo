@@ -1,4 +1,4 @@
-Django==4.2.7
+Django==4.2.11
 Twisted[tls,http2]
 daphne
 django-mathfilters==0.4.0
