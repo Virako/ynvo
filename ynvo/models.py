@@ -140,6 +140,13 @@ class Invoice(models.Model):
             res += " / " + str(self.year)
         return res
 
+    def get_project_name(self):
+        return self.project or self.invo_to.alias
+
+    @property
+    def name(self):
+        return f"{self.number:02}-{self.get_project_name()}"
+
     class Meta:
         ordering = ("-number",)
 
@@ -155,7 +162,7 @@ class Fee(models.Model):
     ftype = models.CharField(max_length=8, choices=FEE_TYPES, default="hour")
     activity = models.CharField(max_length=256)
     price = models.FloatField()
-    amount = models.IntegerField(default=1)
+    amount = models.FloatField(default=1.0)
 
     def __str__(self):
         return "{}: {} x {}".format(self.ftype, self.price, self.amount)

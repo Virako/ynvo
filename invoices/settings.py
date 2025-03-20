@@ -25,7 +25,7 @@ def env_get_admins():
     admins = list_vars.split(',') if list_vars else list()
     for adm in admins:
         res.append(tuple(adm.split(':')))
-    return tuple(res)
+    return res
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
