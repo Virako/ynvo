@@ -1,0 +1,47 @@
+[project]
+name = "invoices"
+version = "0.1.0"
+description = "Invoice management system"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "Django>=5.2,<6",
+    "django-mathfilters>=0.4,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-django",
+    "factory-boy",
+    "ruff",
+    "mypy",
+    "django-stubs[compatible-mypy]",
+    "import-linter",
+    "django-debug-toolbar",
+]
+
+[tool.ruff]
+line-length = 99
+target-version = "py313"
+extend-exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+python_version = "3.13"
+warn_unused_configs = true
+warn_redundant_casts = true
+check_untyped_defs = true
+
+[tool.django-stubs]
+django_settings_module = "invoices.settings"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "invoices.settings"
+pythonpath = ["."]
+
+[tool.importlinter]
+root_packages = ["ynvo"]

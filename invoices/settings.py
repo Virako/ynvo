@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mathfilters",
-    "wkhtmltopdf",
     "ynvo",
 ]
 
