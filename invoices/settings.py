@@ -144,3 +144,14 @@ EMAIL_HOST = env.get("EMAIL_HOST", "localhost")
 EMAIL_PORT = env.get("EMAIL_PORT", 25)
 EMAIL_HOST_USER = env.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = env.get("EMAIL_HOST_PASSWORD", "")
+
+# VeriFactu (Real Decreto 1007/2023) — No VeriFactu mode
+# Software identification (included in the XML SistemaInformatico block)
+VERIFACTU_ENVIRONMENT = env.get("VERIFACTU_ENV", "test")  # "test" | "production"
+VERIFACTU_SOFTWARE_COMPANY = env.get("VERIFACTU_SOFTWARE_COMPANY", "")
+VERIFACTU_SOFTWARE_NIF = env.get("VERIFACTU_SOFTWARE_NIF", "")
+VERIFACTU_SOFTWARE_NAME = env.get("VERIFACTU_SOFTWARE_NAME", "ynvo")
+VERIFACTU_SOFTWARE_VERSION = env.get("VERIFACTU_SOFTWARE_VERSION", "1.0")
+# Certificate paths — only needed if switching to automatic AEAT submission
+# VERIFACTU_CERT_PATH = env.get("VERIFACTU_CERT_PATH", "")
+# VERIFACTU_CERT_KEY_PATH = env.get("VERIFACTU_CERT_KEY_PATH", "")

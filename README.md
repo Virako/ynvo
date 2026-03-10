@@ -20,8 +20,13 @@ invoices/
 ## VeriFactu
 
 Integration with Spain's VeriFactu system (Real Decreto 1007/2023) for invoice
-verification and submission to AEAT. See [verifactu/README.md](verifactu/README.md)
-for details.
+verification. Currently operating in **No VeriFactu** mode: the app generates
+the fingerprint chain, QR codes and XML records, but does not send them
+automatically to AEAT. Records can be submitted manually via AEAT's web portal
+using the taxpayer's browser certificate.
+
+The AEAT SOAP client is implemented and tested for future automatic submission.
+See [verifactu/README.md](verifactu/README.md) for details.
 
 ## Development
 

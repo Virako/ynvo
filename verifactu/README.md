@@ -15,7 +15,28 @@ e inmutabilidad de los registros fiscales.
 - **Sociedades (IS):** 1 de enero de 2027
 - **Autónomos (IRPF):** 1 de julio de 2027
 
-### Requisitos principales
+### Modalidades
+
+Existen dos modalidades de cumplimiento:
+
+- **VeriFactu (envío automático):** El software envía los registros a la AEAT
+  automáticamente por SOAP con certificado digital (mutual TLS). Requiere
+  almacenar el certificado del emisor en el servidor.
+
+- **No VeriFactu (sin envío automático):** El software genera todo lo necesario
+  (cadena de hashes, QR, XML) pero no envía automáticamente a la AEAT.
+  El contribuyente puede enviar los registros más tarde por la sede electrónica
+  de la AEAT usando su certificado digital del navegador. Esta modalidad es
+  más sencilla para autónomos con pocas facturas.
+
+Ambas modalidades requieren cumplir los mismos requisitos técnicos de integridad.
+La diferencia es solo si el envío a AEAT es automático o manual.
+
+**Actualmente este proyecto opera en modo No VeriFactu.** El cliente SOAP
+(`aeat_client.py`) está implementado y testeado para cuando se quiera activar
+el envío automático.
+
+### Requisitos técnicos
 
 1. **Cadena de integridad (hash):** Cada factura genera un fingerprint SHA-256
    que incluye los datos de la factura y el fingerprint de la factura anterior,
@@ -26,17 +47,11 @@ e inmutabilidad de los registros fiscales.
    verificación de la AEAT, permitiendo a cualquiera comprobar la validez
    del registro.
 
-3. **Envío a la AEAT:** Los registros se envían a la Agencia Tributaria
-   mediante SOAP con certificado digital (mutual TLS). Hay dos modalidades:
-   - *VeriFactu:* envío automático a la AEAT en tiempo real.
-   - *No VeriFactu:* el software cumple los requisitos pero no envía
-     automáticamente (el contribuyente puede enviar después).
-
-4. **XML según XSD de la AEAT:** Los registros se generan en formato XML
+3. **XML según XSD de la AEAT:** Los registros se generan en formato XML
    siguiendo los esquemas XSD oficiales publicados por la AEAT
    (`SuministroLR` / `RegFactuSistemaFacturacion`).
 
-5. **Inmutabilidad:** Una vez enviada una factura, no se puede modificar.
+4. **Inmutabilidad:** Una vez registrada una factura, no se puede modificar.
    Solo se puede anular mediante un registro de anulación (`RegistroAnulacion`).
 
 ### Concatenación del fingerprint (Orden HAC/1177/2024)
