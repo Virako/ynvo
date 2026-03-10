@@ -43,13 +43,15 @@ django_settings_module = "invoices.settings"
 DJANGO_SETTINGS_MODULE = "invoices.settings"
 pythonpath = ["."]
 python_files = [
+    "**/test_*.py",
     "**/*_test*.py",
     "**/tests.py",
     "**/tests_*.py",
 ]
 
 [tool.importlinter]
-root_packages = ["ynvo"]
+root_packages = ["ynvo", "verifactu"]
+include_external_packages = true
 
 [[tool.importlinter.contracts]]
 name = "models must not import from services or views"
