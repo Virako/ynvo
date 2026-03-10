@@ -92,23 +92,53 @@ class InvoiceAdmin(admin.ModelAdmin):
         "created",
         "paid",
         "pdf_url",
+        "verifactu_status",
     )
     show_full_result_count = False
     inlines = [FeeInline]
     list_filter = ("invo_to", "year")
     date_hierarchy = "created"
-    exclude = ("invo_from",)
+    exclude = ("invo_from", "invoice_record")
+    actions = ["register_in_verifactu"]
 
     def pdf_url(self, obj):
         return format_html(
             f"<a target='_blank' href='/ynvo/{obj.year}/{obj.number}/'>GEN</a>"
         )
 
-    def get_queryset(self, request):
-        if request.user.is_superuser:
-            return super().get_queryset(request)
+    def verifactu_status(self, obj):
+        if obj.invoice_record is None:
+            return "-"
+        return obj.invoice_record.get_status_display()
 
-        return super().get_queryset(request).filter(invo_from__user=request.user)
+    verifactu_status.short_description = "VeriFactu"  # type: ignore[attr-defined]
+
+    def get_readonly_fields(self, request, obj=None):
+        if (
+            obj
+            and obj.invoice_record
+            and not obj.invoice_record.is_editable
+        ):
+            return ("number", "year", "invo_to", "tax", "reverse_tax")
+        return ()
+
+    @admin.action(description="Register in VeriFactu")  # type: ignore[arg-type]
+    def register_in_verifactu(self, request, queryset):
+        from ynvo.services import register_invoice
+
+        registered = 0
+        for invoice in queryset.select_related("invoice_record", "invo_from"):
+            if invoice.invoice_record is not None or invoice.proforma:
+                continue
+            register_invoice(invoice)
+            registered += 1
+        self.message_user(request, f"{registered} invoice(s) registered in VeriFactu.")
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request).select_related("invoice_record")
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(invo_from__user=request.user)
 
     def save_model(self, request, obj, form, change):
         if not change:  # only set the transmitter when the object is created

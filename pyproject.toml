@@ -56,7 +56,7 @@ python_files = [
 ]
 
 [tool.importlinter]
-root_packages = ["ynvo", "verifactu"]
+root_packages = ["ynvo", "verifactu", "django_verifactu"]
 include_external_packages = true
 
 [[tool.importlinter.contracts]]
@@ -83,8 +83,14 @@ type = "forbidden"
 source_modules = ["verifactu"]
 forbidden_modules = ["django", "django_verifactu", "ynvo"]
 
+[[tool.importlinter.contracts]]
+name = "django_verifactu does not know about ynvo"
+type = "forbidden"
+source_modules = ["django_verifactu"]
+forbidden_modules = ["ynvo"]
+
 [tool.coverage.run]
-source = ["ynvo", "verifactu"]
+source = ["ynvo", "verifactu", "django_verifactu"]
 omit = [
     "*/migrations/*",
     "*/apps.py",

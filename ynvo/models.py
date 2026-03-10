@@ -74,6 +74,12 @@ class Invoice(models.Model):
     created = models.DateField(editable=True, blank=True)
     paid = models.DateField(blank=True, null=True)
     proforma = models.BooleanField(default=False)
+    invoice_record = models.OneToOneField(
+        "django_verifactu.InvoiceRecord",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
 
     def get_totals(self):
         subtotal = 0.0

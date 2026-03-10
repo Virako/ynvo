@@ -91,8 +91,28 @@ fingerprint = compute_registration_fingerprint(
 )
 ```
 
+## Django integration: `django_verifactu`
+
+The `django_verifactu` app provides Django persistence for VeriFactu records:
+
+- **`InvoiceRecord` model** — Stores fingerprint chain, AEAT responses, QR URLs,
+  amendment/rejection fields, and submission status.
+- **`InvoiceRecordManager`** — QuerySet methods: `pending()`, `by_issuer()`,
+  `chain_ordered()`, `last_fingerprint()`.
+- **Read-only admin** — All fields are readonly; records cannot be added or
+  deleted from the admin.
+
+The `ynvo` app integrates via `ynvo/services.py`:
+
+- `register_invoice(invoice)` — Creates an InvoiceRecord, computes fingerprint
+  and QR URL, and links it to the invoice.
+- `cancel_invoice_record(invoice)` — Creates a cancellation record.
+- `submit_to_aeat(record)` — Builds XML, sends via SOAP, and applies the response.
+
 ## Tests
 
 ```bash
-uv run pytest verifactu/
+uv run pytest verifactu/           # pure Python library
+uv run pytest django_verifactu/    # Django model/manager
+uv run pytest ynvo/test_services.py  # service integration (mocks)
 ```
