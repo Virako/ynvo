@@ -66,11 +66,14 @@ Para el primer registro de la cadena, `Huella` queda vacío (pero el campo se in
   `compute_cancellation_fingerprint()` (anulación), con nombres de campo
   diferentes según el tipo de registro.
 - `constants.py` — Tipos de factura (StrEnum), URLs de la AEAT y constantes del algoritmo.
+- `qr.py` — Generación de código QR con URL de verificación de la AEAT.
+- `xml_builder.py` — Generación de XML (`RegistroAlta` y `RegistroAnulacion`)
+  y validación contra los XSD oficiales de la AEAT.
+- `schemas/` — XSD oficiales de la AEAT (SuministroLR, SuministroInformacion,
+  RespuestaSuministro).
 
 ## Módulos planificados
 
-- `qr.py` — Generación de código QR con URL de verificación de la AEAT.
-- `xml_builder.py` — Generación de XML y validación contra XSD de la AEAT.
 - `aeat_client.py` — Cliente SOAP para el envío de registros a la AEAT.
 
 ## Uso
