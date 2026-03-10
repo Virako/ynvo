@@ -1,7 +1,8 @@
 import hashlib
 
 
-def compute_fingerprint(
+def compute_registration_fingerprint(
+    *,
     issuer_nif: str,
     serial_number: str,
     issue_date: str,
@@ -11,16 +12,46 @@ def compute_fingerprint(
     previous_fingerprint: str,
     generation_timestamp: str,
 ) -> str:
-    """Compute SHA-256 fingerprint per Orden HAC/1177/2024.
+    """Compute SHA-256 fingerprint for registration records.
 
-    Concatenation order:
-        IDEmisorFactura + NumSerieFactura + FechaExpedicionFactura +
-        TipoFactura + CuotaTotal + ImporteTotal +
-        Huella_RegistroAnterior + FechaHoraHusoGenRegistro
+    Format per Orden HAC/1177/2024:
+        IDEmisorFactura=...&NumSerieFactura=...&...
+
+    Values are NOT URL-encoded.
     """
-    payload = (
-        f"{issuer_nif}{serial_number}{issue_date}"
-        f"{invoice_type}{tax_amount}{total_amount}"
-        f"{previous_fingerprint}{generation_timestamp}"
-    )
-    return hashlib.sha256(payload.encode("UTF-8")).hexdigest()
+    payload = "&".join([
+        f"IDEmisorFactura={issuer_nif}",
+        f"NumSerieFactura={serial_number}",
+        f"FechaExpedicionFactura={issue_date}",
+        f"TipoFactura={invoice_type}",
+        f"CuotaTotal={tax_amount}",
+        f"ImporteTotal={total_amount}",
+        f"Huella={previous_fingerprint}",
+        f"FechaHoraHusoGenRegistro={generation_timestamp}",
+    ])
+    return hashlib.sha256(payload.encode("UTF-8")).hexdigest().upper()
+
+
+def compute_cancellation_fingerprint(
+    *,
+    issuer_nif: str,
+    serial_number: str,
+    issue_date: str,
+    previous_fingerprint: str,
+    generation_timestamp: str,
+) -> str:
+    """Compute SHA-256 fingerprint for cancellation records.
+
+    Format per Orden HAC/1177/2024:
+        IDEmisorFacturaAnulada=...&NumSerieFacturaAnulada=...&...
+
+    Values are NOT URL-encoded.
+    """
+    payload = "&".join([
+        f"IDEmisorFacturaAnulada={issuer_nif}",
+        f"NumSerieFacturaAnulada={serial_number}",
+        f"FechaExpedicionFacturaAnulada={issue_date}",
+        f"Huella={previous_fingerprint}",
+        f"FechaHoraHusoGenRegistro={generation_timestamp}",
+    ])
+    return hashlib.sha256(payload.encode("UTF-8")).hexdigest().upper()

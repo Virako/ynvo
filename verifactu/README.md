@@ -41,19 +41,30 @@ e inmutabilidad de los registros fiscales.
 
 ### Concatenación del fingerprint (Orden HAC/1177/2024)
 
+**Alta (RegistroAlta):**
 ```
-IDEmisorFactura + NumSerieFactura + FechaExpedicionFactura +
-TipoFactura + CuotaTotal + ImporteTotal +
-Huella_RegistroAnterior + FechaHoraHusoGenRegistro
+IDEmisorFactura=valor&NumSerieFactura=valor&FechaExpedicionFactura=valor&
+TipoFactura=valor&CuotaTotal=valor&ImporteTotal=valor&
+Huella=valor&FechaHoraHusoGenRegistro=valor
 ```
 
-El resultado se calcula con SHA-256 sobre la cadena codificada en UTF-8.
-Para la primera factura de la cadena, `Huella_RegistroAnterior` queda vacío.
+**Anulación (RegistroAnulacion):**
+```
+IDEmisorFacturaAnulada=valor&NumSerieFacturaAnulada=valor&
+FechaExpedicionFacturaAnulada=valor&Huella=valor&
+FechaHoraHusoGenRegistro=valor
+```
+
+Formato: `campo=valor` separados por `&` (sin URL-encoding).
+SHA-256 sobre la cadena en UTF-8. Resultado en hexadecimal mayúsculas.
+Para el primer registro de la cadena, `Huella` queda vacío (pero el campo se incluye).
 
 ## Módulos
 
 - `hash.py` — Cálculo del fingerprint SHA-256 según Orden HAC/1177/2024.
-  Implementa la concatenación oficial para la cadena de integridad de registros.
+  Dos funciones: `compute_registration_fingerprint()` (alta) y
+  `compute_cancellation_fingerprint()` (anulación), con nombres de campo
+  diferentes según el tipo de registro.
 - `constants.py` — Tipos de factura (StrEnum), URLs de la AEAT y constantes del algoritmo.
 
 ## Módulos planificados
@@ -65,9 +76,9 @@ Para la primera factura de la cadena, `Huella_RegistroAnterior` queda vacío.
 ## Uso
 
 ```python
-from verifactu.hash import compute_fingerprint
+from verifactu.hash import compute_registration_fingerprint
 
-fingerprint = compute_fingerprint(
+fingerprint = compute_registration_fingerprint(
     issuer_nif="B12345678",
     serial_number="FAC-2027-001",
     issue_date="01-01-2027",
