@@ -22,7 +22,7 @@ dev = [
 ]
 
 [tool.ruff]
-line-length = 99
+line-length = 88
 target-version = "py313"
 extend-exclude = ["*/migrations/*"]
 
@@ -42,6 +42,29 @@ django_settings_module = "invoices.settings"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "invoices.settings"
 pythonpath = ["."]
+python_files = [
+    "**/*_test*.py",
+    "**/tests.py",
+    "**/tests_*.py",
+]
 
 [tool.importlinter]
 root_packages = ["ynvo"]
+
+[[tool.importlinter.contracts]]
+name = "models must not import from services or views"
+type = "forbidden"
+source_modules = ["ynvo.models"]
+forbidden_modules = ["ynvo.services", "ynvo.views", "ynvo.admin"]
+
+[[tool.importlinter.contracts]]
+name = "managers must not import from services, views or admin"
+type = "forbidden"
+source_modules = ["ynvo.managers"]
+forbidden_modules = ["ynvo.services", "ynvo.views", "ynvo.admin"]
+
+[[tool.importlinter.contracts]]
+name = "views must not import from admin"
+type = "forbidden"
+source_modules = ["ynvo.views"]
+forbidden_modules = ["ynvo.admin"]

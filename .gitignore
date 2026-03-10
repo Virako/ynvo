@@ -1,4 +1,17 @@
 *.swp
 *.pyc
-env
 __pycache__
+
+# Virtual environments
+env/
+.venv/
+
+# Database
+*.sqlite3
+
+# Static collected
+staticfiles/
+
+# IDE / editors
+tags
+.ackrc

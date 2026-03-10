@@ -11,20 +11,22 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from os import environ as env
+
 
 def env_list(env_name, default=list):
     """Get environment var and convert in python list. Example .env: APPS=x1,y2,z3"""
-    list_vars = os.environ.get(env_name, None)
+    list_vars = env.get(env_name, None)
     return list_vars.split(",") if list_vars else default
 
 
 def env_get_admins():
-    """ Example: Foo:foo@test.com,Bar:bar@test.com """
+    """Example: Foo:foo@test.com,Bar:bar@test.com"""
     res = list()
-    list_vars = os.environ.get('ADMINS', '')
-    admins = list_vars.split(',') if list_vars else list()
+    list_vars = env.get("ADMINS", "")
+    admins = list_vars.split(",") if list_vars else list()
     for adm in admins:
-        res.append(tuple(adm.split(':')))
+        res.append(tuple(adm.split(":")))
     return res
 
 
@@ -36,10 +38,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", "example")
+SECRET_KEY = env.get("SECRET_KEY", "example")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+DEBUG = env.get("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", [])
 
@@ -95,33 +97,10 @@ WSGI_APPLICATION = "invoices.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("DB_ENGINE", "django.db.backends.postgresql"),
-        "NAME": os.environ.get("DB_NAME", "ynvo"),
-        "USER": os.environ.get("DB_USER", "ynvo"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", "ynvo"),
-        "HOST": os.environ.get("DB_HOST", "localhost"),
-        "PORT": os.environ.get("DB_PORT", "5432"),
+        "ENGINE": env.get("DB_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": env.get("DB_NAME", "db.sqlite3"),
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-]
 
 
 # Internationalization
@@ -129,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "es-es"
 
-TIME_ZONE = 'Europe/Madrid'
+TIME_ZONE = "Europe/Madrid"
 
 USE_I18N = True
 
@@ -141,55 +120,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = os.environ.get("STATIC_URL", "static/")
-STATIC_ROOT = os.environ.get("STATIC_ROOT", "static/")
-MEDIA_URL = os.environ.get("MEDIA_URL", "media/")
-MEDIA_ROOT = os.environ.get("MEDIA_ROOT", "media/")
+STATIC_URL = env.get("STATIC_URL", "static/")
+STATIC_ROOT = env.get("STATIC_ROOT", "static/")
+MEDIA_URL = env.get("MEDIA_URL", "media/")
+MEDIA_ROOT = env.get("MEDIA_ROOT", "media/")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CSRF_COOKIE_SECURE = os.environ.get("CSRF_COOKIE_SECURE", "True") == "True"
-CSRF_COOKIE_SAMESITE = os.environ.get("CSRF_COOKIE_SAMESITE", "strict")
+CSRF_COOKIE_SECURE = env.get("CSRF_COOKIE_SECURE", "True") == "True"
+CSRF_COOKIE_SAMESITE = env.get("CSRF_COOKIE_SAMESITE", "strict")
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", [])
 
 # EMAIL
-SERVER_EMAIL = os.environ.get("SERVER_EMAIL", "root@localhost")
-EMAIL_BACKEND = os.environ.get(
-    "EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend"
-)
-EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "False") == "True"
-EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "False") == "True"
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
-EMAIL_PORT = os.environ.get("EMAIL_PORT", 25)
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-
-if DEBUG:
-    MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware"] + MIDDLEWARE
-    INSTALLED_APPS += [
-        "debug_toolbar",
-    ]
-
-    INTERNAL_IPS = [
-        "127.0.0.1",
-        "localhost",
-    ]
-
-DEBUG_TOOLBAR_PANELS = [
-    "debug_toolbar.panels.history.HistoryPanel",
-    "debug_toolbar.panels.versions.VersionsPanel",
-    "debug_toolbar.panels.timer.TimerPanel",
-    "debug_toolbar.panels.settings.SettingsPanel",
-    "debug_toolbar.panels.headers.HeadersPanel",
-    "debug_toolbar.panels.request.RequestPanel",
-    "debug_toolbar.panels.sql.SQLPanel",
-    "debug_toolbar.panels.staticfiles.StaticFilesPanel",
-    "debug_toolbar.panels.templates.TemplatesPanel",
-    "debug_toolbar.panels.cache.CachePanel",
-    "debug_toolbar.panels.signals.SignalsPanel",
-    "debug_toolbar.panels.redirects.RedirectsPanel",
-    "debug_toolbar.panels.profiling.ProfilingPanel",
-]
+SERVER_EMAIL = env.get("SERVER_EMAIL", "root@localhost")
+EMAIL_BACKEND = env.get("EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
+EMAIL_USE_TLS = env.get("EMAIL_USE_TLS", "False") == "True"
+EMAIL_USE_SSL = env.get("EMAIL_USE_SSL", "False") == "True"
+EMAIL_HOST = env.get("EMAIL_HOST", "localhost")
+EMAIL_PORT = env.get("EMAIL_PORT", 25)
+EMAIL_HOST_USER = env.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = env.get("EMAIL_HOST_PASSWORD", "")

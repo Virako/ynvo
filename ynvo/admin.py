@@ -5,12 +5,12 @@ from ynvo.filters import ClientFilter, ProjectFilter, TaskFilter
 from ynvo.forms import CommentAdminForm, TaskAdminForm, WorkAdminForm
 from ynvo.models import (
     Client,
+    Comment,
     Fee,
     Invoice,
-    Transmitter,
     Project,
     Task,
-    Comment,
+    Transmitter,
     Work,
 )
 
@@ -28,7 +28,7 @@ class ClientAdmin(admin.ModelAdmin):
         return (
             super()
             .get_queryset(request)
-            .with_transmitter()
+            .with_transmitter()  # type: ignore[attr-defined]
             .filter(transmitter__user=request.user)
         )
 
@@ -67,7 +67,8 @@ class FeeAdmin(admin.ModelAdmin):
             return super().get_queryset(request)
 
         return (
-            super().get_queryset(request)
+            super()
+            .get_queryset(request)
             # .with_transmitter()
             .filter(invoice__invo_from__user=request.user)
         )
@@ -167,7 +168,8 @@ class TaskAdmin(admin.ModelAdmin):
             return super().get_queryset(request)
 
         return (
-            super().get_queryset(request)
+            super()
+            .get_queryset(request)
             # .with_transmitter()
             .filter(project__client__transmitter__user=request.user)
         )
@@ -184,7 +186,8 @@ class CommentAdmin(admin.ModelAdmin):
             return super().get_queryset(request)
 
         return (
-            super().get_queryset(request)
+            super()
+            .get_queryset(request)
             # .with_transmitter()
             .filter(task__project__client__transmitter__user=request.user)
         )
@@ -201,7 +204,8 @@ class WorkAdmin(admin.ModelAdmin):
             return super().get_queryset(request)
 
         return (
-            super().get_queryset(request)
+            super()
+            .get_queryset(request)
             # .with_transmitter()
             .filter(task__project__client__transmitter__user=request.user)
         )

@@ -7,12 +7,12 @@ class ClientQuerySet(models.QuerySet):
 
 
 class ReadClientManager(models.Manager):
-    def get_queryset(self):
+    def get_queryset(self) -> ClientQuerySet:
         return ClientQuerySet(self.model, using="default")
 
 
 class WriteClientManager(models.Manager):
-    def get_queryset(self):
+    def get_queryset(self) -> ClientQuerySet:
         return ClientQuerySet(self.model, using="default")
 
 

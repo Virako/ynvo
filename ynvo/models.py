@@ -1,7 +1,7 @@
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
 
 from ynvo.choices import TaskStatus
 from ynvo.managers import (
@@ -76,9 +76,9 @@ class Invoice(models.Model):
     proforma = models.BooleanField(default=False)
 
     def get_totals(self):
-        subtotal = 0
-        t_tax = 0
-        t_reverse_tax = 0
+        subtotal = 0.0
+        t_tax = 0.0
+        t_reverse_tax = 0.0
         for fee in self.fees.all():
             sub = fee.price * fee.amount
             subtotal += sub
@@ -88,17 +88,17 @@ class Invoice(models.Model):
         res = []
         res.append(["subtotal", "Subtotal", subtotal])
         if self.tax:
-            name = "{} ({}%)".format(self.taxname, self.tax)
+            name = f"{self.taxname} ({self.tax}%)"
             res.append(["tax", name, t_tax])
         if self.reverse_tax:
-            name = "{} ({}%)".format(self.reverse_taxname, self.reverse_tax)
+            name = f"{self.reverse_taxname} ({self.reverse_tax}%)"
             res.append(["reverse-tax", name, t_reverse_tax])
         if self.extra_currency:
-            res.append(["total", "TOTAL ({})".format(self.currency), total])
+            res.append(["total", f"TOTAL ({self.currency})", total])
             res.append(
                 [
                     "extra-total",
-                    "TOTAL ({}) *".format(self.extra_currency),
+                    f"TOTAL ({self.extra_currency}) *",
                     total * self.currency_exchange,
                 ]
             )
@@ -112,7 +112,7 @@ class Invoice(models.Model):
         return round(total, 2)
 
     def number_wadobo(self):
-        return "{}/{:03d}".format(self.year, self.number)
+        return f"{self.year}/{self.number:03d}"
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -122,10 +122,13 @@ class Invoice(models.Model):
             if not self.number:
                 try:
                     last_number = (
-                        Invoice.objects.filter(year=self.year)
-                        .order_by("-number")
-                        .values_list("number", flat=True)[0]
-                    ) or 0
+                        (
+                            Invoice.objects.filter(year=self.year)
+                            .order_by("-number")
+                            .values_list("number", flat=True)[0]
+                        )
+                        or 0
+                    )
                 except Exception:
                     last_number = 0
                 self.number = last_number + 1
@@ -165,7 +168,7 @@ class Fee(models.Model):
     amount = models.FloatField(default=1.0)
 
     def __str__(self):
-        return "{}: {} x {}".format(self.ftype, self.price, self.amount)
+        return f"{self.ftype}: {self.price} x {self.amount}"
 
 
 class Project(models.Model):
