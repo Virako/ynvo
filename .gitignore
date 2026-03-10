@@ -12,6 +12,10 @@ env/
 # Static collected
 staticfiles/
 
+# Coverage
+htmlcov/
+.coverage
+
 # IDE / editors
 tags
 .ackrc

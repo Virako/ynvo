@@ -17,6 +17,7 @@ dev = [
     "ruff",
     "mypy",
     "django-stubs[compatible-mypy]",
+    "pytest-cov",
     "import-linter",
     "django-debug-toolbar",
 ]
@@ -70,3 +71,29 @@ name = "views must not import from admin"
 type = "forbidden"
 source_modules = ["ynvo.views"]
 forbidden_modules = ["ynvo.admin"]
+
+[[tool.importlinter.contracts]]
+name = "verifactu is framework-agnostic"
+type = "forbidden"
+source_modules = ["verifactu"]
+forbidden_modules = ["django", "django_verifactu", "ynvo"]
+
+[tool.coverage.run]
+source = ["ynvo", "verifactu"]
+omit = [
+    "*/migrations/*",
+    "*/apps.py",
+    "*/test_*.py",
+    "*/tests.py",
+    "*/factories.py",
+]
+
+[tool.coverage.html]
+show_contexts = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __str__",
+    "if DEBUG",
+]
