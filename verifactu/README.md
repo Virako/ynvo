@@ -69,12 +69,10 @@ Para el primer registro de la cadena, `Huella` queda vacío (pero el campo se in
 - `qr.py` — Generación de código QR con URL de verificación de la AEAT.
 - `xml_builder.py` — Generación de XML (`RegistroAlta` y `RegistroAnulacion`)
   y validación contra los XSD oficiales de la AEAT.
+- `aeat_client.py` — Cliente SOAP para el envío de registros a la AEAT
+  (mutual TLS, SOAP 1.1, parseo de respuesta, conversión PFX→PEM).
 - `schemas/` — XSD oficiales de la AEAT (SuministroLR, SuministroInformacion,
   RespuestaSuministro).
-
-## Módulos planificados
-
-- `aeat_client.py` — Cliente SOAP para el envío de registros a la AEAT.
 
 ## Uso
 
