@@ -115,18 +115,14 @@ def _add_sub(parent: etree._Element, tag: str, text: str) -> etree._Element:
     return el
 
 
-def _build_header(
-    root: etree._Element, issuer_nif: str, issuer_name: str
-) -> None:
+def _build_header(root: etree._Element, issuer_nif: str, issuer_name: str) -> None:
     cabecera = etree.SubElement(root, _slr("Cabecera"))
     obligado = etree.SubElement(cabecera, _sf("ObligadoEmision"))
     _add_sub(obligado, _sf("NombreRazon"), issuer_name)
     _add_sub(obligado, _sf("NIF"), issuer_nif)
 
 
-def _build_software(
-    parent: etree._Element, sw: SoftwareInfo
-) -> None:
+def _build_software(parent: etree._Element, sw: SoftwareInfo) -> None:
     sistema = etree.SubElement(parent, _sf("SistemaInformatico"))
     _add_sub(sistema, _sf("NombreRazon"), sw.name)
     _add_sub(sistema, _sf("NIF"), sw.nif)
@@ -134,16 +130,12 @@ def _build_software(
     _add_sub(sistema, _sf("IdSistemaInformatico"), sw.software_id)
     _add_sub(sistema, _sf("Version"), sw.version)
     _add_sub(sistema, _sf("NumeroInstalacion"), sw.installation_number)
-    _add_sub(
-        sistema, _sf("TipoUsoPosibleSoloVerifactu"), sw.verifactu_only
-    )
+    _add_sub(sistema, _sf("TipoUsoPosibleSoloVerifactu"), sw.verifactu_only)
     _add_sub(sistema, _sf("TipoUsoPosibleMultiOT"), sw.multi_ot)
     _add_sub(sistema, _sf("IndicadorMultiplesOT"), sw.multiple_ot)
 
 
-def _build_chaining(
-    parent: etree._Element, previous: PreviousInvoice | None
-) -> None:
+def _build_chaining(parent: etree._Element, previous: PreviousInvoice | None) -> None:
     enc = etree.SubElement(parent, _sf("Encadenamiento"))
     if previous is None:
         _add_sub(enc, _sf("PrimerRegistro"), "S")
@@ -151,23 +143,17 @@ def _build_chaining(
         reg = etree.SubElement(enc, _sf("RegistroAnterior"))
         _add_sub(reg, _sf("IDEmisorFactura"), previous.issuer_nif)
         _add_sub(reg, _sf("NumSerieFactura"), previous.serial_number)
-        _add_sub(
-            reg, _sf("FechaExpedicionFactura"), previous.issue_date
-        )
+        _add_sub(reg, _sf("FechaExpedicionFactura"), previous.issue_date)
         _add_sub(reg, _sf("Huella"), previous.fingerprint)
 
 
 def build_registration_xml(data: InvoiceData) -> bytes:
     """Genera XML de alta de factura según XSD de AEAT."""
-    root = etree.Element(
-        _slr("RegFactuSistemaFacturacion"), nsmap=NSMAP
-    )
+    root = etree.Element(_slr("RegFactuSistemaFacturacion"), nsmap=NSMAP)
 
     _build_header(root, data.issuer_nif, data.issuer_name)
 
-    reg_factura = etree.SubElement(
-        root, _slr("RegistroFactura")
-    )
+    reg_factura = etree.SubElement(root, _slr("RegistroFactura"))
     alta = etree.SubElement(reg_factura, _sf("RegistroAlta"))
 
     _add_sub(alta, _sf("IDVersion"), "1.0")
@@ -176,9 +162,7 @@ def build_registration_xml(data: InvoiceData) -> bytes:
     id_factura = etree.SubElement(alta, _sf("IDFactura"))
     _add_sub(id_factura, _sf("IDEmisorFactura"), data.issuer_nif)
     _add_sub(id_factura, _sf("NumSerieFactura"), data.serial_number)
-    _add_sub(
-        id_factura, _sf("FechaExpedicionFactura"), data.issue_date
-    )
+    _add_sub(id_factura, _sf("FechaExpedicionFactura"), data.issue_date)
 
     _add_sub(alta, _sf("NombreRazonEmisor"), data.issuer_name)
 
@@ -193,13 +177,9 @@ def build_registration_xml(data: InvoiceData) -> bytes:
         _add_sub(alta, _sf("TipoRectificativa"), data.correction_type)
 
     if data.rectified_invoices:
-        facturas_rect = etree.SubElement(
-            alta, _sf("FacturasRectificadas")
-        )
+        facturas_rect = etree.SubElement(alta, _sf("FacturasRectificadas"))
         for ri in data.rectified_invoices:
-            id_rect = etree.SubElement(
-                facturas_rect, _sf("IDFacturaRectificada")
-            )
+            id_rect = etree.SubElement(facturas_rect, _sf("IDFacturaRectificada"))
             _add_sub(id_rect, _sf("IDEmisorFactura"), ri.issuer_nif)
             _add_sub(id_rect, _sf("NumSerieFactura"), ri.serial_number)
             _add_sub(
@@ -209,9 +189,7 @@ def build_registration_xml(data: InvoiceData) -> bytes:
             )
 
     if data.correction_amount is not None:
-        importe_rect = etree.SubElement(
-            alta, _sf("ImporteRectificacion")
-        )
+        importe_rect = etree.SubElement(alta, _sf("ImporteRectificacion"))
         _add_sub(
             importe_rect,
             _sf("BaseRectificada"),
@@ -239,9 +217,7 @@ def build_registration_xml(data: InvoiceData) -> bytes:
         _add_sub(detalle, _sf("ClaveRegimen"), data.regime_key)
         _add_sub(detalle, _sf("CalificacionOperacion"), td.operation_type)
         _add_sub(detalle, _sf("TipoImpositivo"), td.tax_rate)
-        _add_sub(
-            detalle, _sf("BaseImponibleOimporteNoSujeto"), td.tax_base
-        )
+        _add_sub(detalle, _sf("BaseImponibleOimporteNoSujeto"), td.tax_base)
         _add_sub(detalle, _sf("CuotaRepercutida"), td.tax_amount)
 
     _add_sub(alta, _sf("CuotaTotal"), data.tax_amount)
@@ -250,9 +226,7 @@ def build_registration_xml(data: InvoiceData) -> bytes:
     _build_chaining(alta, data.previous)
     _build_software(alta, data.software)
 
-    _add_sub(
-        alta, _sf("FechaHoraHusoGenRegistro"), data.generation_timestamp
-    )
+    _add_sub(alta, _sf("FechaHoraHusoGenRegistro"), data.generation_timestamp)
     _add_sub(alta, _sf("TipoHuella"), "01")
     _add_sub(alta, _sf("Huella"), data.fingerprint)
 
@@ -263,26 +237,18 @@ def build_registration_xml(data: InvoiceData) -> bytes:
 
 def build_cancellation_xml(data: CancellationData) -> bytes:
     """Genera XML de anulación de factura según XSD de AEAT."""
-    root = etree.Element(
-        _slr("RegFactuSistemaFacturacion"), nsmap=NSMAP
-    )
+    root = etree.Element(_slr("RegFactuSistemaFacturacion"), nsmap=NSMAP)
 
     _build_header(root, data.issuer_nif, data.issuer_name)
 
-    reg_factura = etree.SubElement(
-        root, _slr("RegistroFactura")
-    )
-    anulacion = etree.SubElement(
-        reg_factura, _sf("RegistroAnulacion")
-    )
+    reg_factura = etree.SubElement(root, _slr("RegistroFactura"))
+    anulacion = etree.SubElement(reg_factura, _sf("RegistroAnulacion"))
 
     _add_sub(anulacion, _sf("IDVersion"), "1.0")
 
     # IDFactura (baja)
     id_factura = etree.SubElement(anulacion, _sf("IDFactura"))
-    _add_sub(
-        id_factura, _sf("IDEmisorFacturaAnulada"), data.issuer_nif
-    )
+    _add_sub(id_factura, _sf("IDEmisorFacturaAnulada"), data.issuer_nif)
     _add_sub(
         id_factura,
         _sf("NumSerieFacturaAnulada"),

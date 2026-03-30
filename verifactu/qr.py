@@ -16,12 +16,14 @@ def build_verification_url(
 ) -> str:
     """Genera la URL de verificación de la AEAT para el código QR."""
     base_url = AEAT_PRODUCTION_URL if production else AEAT_TEST_URL
-    params = urlencode({
-        "nif": nif,
-        "numserie": serial_number,
-        "fecha": issue_date,
-        "importe": total_amount,
-    })
+    params = urlencode(
+        {
+            "nif": nif,
+            "numserie": serial_number,
+            "fecha": issue_date,
+            "importe": total_amount,
+        }
+    )
     return f"{base_url}?{params}"
 
 

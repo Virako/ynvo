@@ -334,5 +334,5 @@ def test_client_submit_http_error_non_500(mock_session: MagicMock):
 def test_pfx_to_pem_raises_on_invalid_pfx(tmp_path):
     bad_pfx = tmp_path / "bad.pfx"
     bad_pfx.write_bytes(b"not a pfx file")
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         pfx_to_pem(str(bad_pfx), "password")

@@ -57,10 +57,6 @@ class TestInvoiceRecordManager:
         assert qs.count() == 2
 
     def test_chain_ordered(self):
-        qs = (
-            InvoiceRecord.objects.get_queryset()
-            .by_issuer("B12345678")
-            .chain_ordered()
-        )
+        qs = InvoiceRecord.objects.get_queryset().by_issuer("B12345678").chain_ordered()
         serials = list(qs.values_list("serial_number", flat=True))
         assert serials == ["FAC-2027-001", "FAC-2027-002"]

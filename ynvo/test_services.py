@@ -11,7 +11,6 @@ from verifactu.aeat_client import (
     SubmissionResponse,
     SubmissionStatus,
 )
-
 from ynvo.services import (
     _apply_response,
     _format_amount,
@@ -19,7 +18,6 @@ from ynvo.services import (
     register_invoice,
     submit_to_aeat,
 )
-
 
 # --- Helpers ---
 
@@ -97,13 +95,14 @@ def test_format_amount_integer():
 # --- register_invoice ---
 
 
+@patch("ynvo.services._build_registration_xml", return_value=b"<xml/>")
 @patch("ynvo.services.build_verification_url", return_value="https://example.com/qr")
 @patch("ynvo.services.compute_registration_fingerprint", return_value="f" * 64)
 @patch("ynvo.services._build_previous", return_value=None)
 @patch("ynvo.services._generation_timestamp")
 @patch("ynvo.services.InvoiceRecord")
 def test_register_invoice_creates_record(
-    mock_ir_cls, mock_ts, mock_prev, mock_fp, mock_qr
+    mock_ir_cls, mock_ts, mock_prev, mock_fp, mock_qr, mock_build_xml
 ):
     mock_ts.return_value = ("2027-01-15T10:00:00+01:00", MagicMock())
     created_record = MagicMock()
@@ -134,13 +133,14 @@ def test_register_invoice_raises_if_proforma(mock_ir_cls):
         register_invoice(invoice)
 
 
+@patch("ynvo.services._build_registration_xml", return_value=b"<xml/>")
 @patch("ynvo.services.build_verification_url", return_value="https://example.com/qr")
 @patch("ynvo.services.compute_registration_fingerprint", return_value="f" * 64)
 @patch("ynvo.services._build_previous")
 @patch("ynvo.services._generation_timestamp")
 @patch("ynvo.services.InvoiceRecord")
 def test_register_invoice_uses_previous_fingerprint(
-    mock_ir_cls, mock_ts, mock_prev, mock_fp, mock_qr
+    mock_ir_cls, mock_ts, mock_prev, mock_fp, mock_qr, mock_build_xml
 ):
     prev = MagicMock(fingerprint="b" * 64)
     mock_prev.return_value = prev
@@ -247,9 +247,7 @@ def test_apply_response_record_rejected():
 
 def test_apply_response_no_records_means_rejected():
     record = _make_record()
-    response = SubmissionResponse(
-        status=SubmissionStatus.INCORRECT, csv="", records=[]
-    )
+    response = SubmissionResponse(status=SubmissionStatus.INCORRECT, csv="", records=[])
 
     _apply_response(record, response)
 

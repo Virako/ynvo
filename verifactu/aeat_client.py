@@ -161,20 +161,18 @@ def pfx_to_pem(pfx_path: str, password: str) -> tuple[str, str]:
     if private_key is None or certificate is None:
         raise AEATClientError("PFX file does not contain key and certificate")
 
-    cert_file = tempfile.NamedTemporaryFile(suffix=".pem", delete=False)
-    cert_file.write(certificate.public_bytes(Encoding.PEM))
-    cert_file.close()
+    with tempfile.NamedTemporaryFile(suffix=".pem", delete=False) as cert_file:
+        cert_file.write(certificate.public_bytes(Encoding.PEM))
 
-    key_file = tempfile.NamedTemporaryFile(suffix=".pem", delete=False)
-    key_file.write(
-        private_key.private_bytes(
-            Encoding.PEM,
-            format=BestAvailableEncryption(password.encode("UTF-8"))
-            if password
-            else NoEncryption(),
-        )  # type: ignore[arg-type]
-    )
-    key_file.close()
+    with tempfile.NamedTemporaryFile(suffix=".pem", delete=False) as key_file:
+        key_file.write(
+            private_key.private_bytes(
+                Encoding.PEM,
+                format=BestAvailableEncryption(password.encode("UTF-8"))
+                if password
+                else NoEncryption(),
+            )  # type: ignore[arg-type]
+        )
 
     return cert_file.name, key_file.name
 

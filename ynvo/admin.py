@@ -114,11 +114,7 @@ class InvoiceAdmin(admin.ModelAdmin):
     verifactu_status.short_description = "VeriFactu"  # type: ignore[attr-defined]
 
     def get_readonly_fields(self, request, obj=None):
-        if (
-            obj
-            and obj.invoice_record
-            and not obj.invoice_record.is_editable
-        ):
+        if obj and obj.invoice_record and not obj.invoice_record.is_editable:
             return ("number", "year", "invo_to", "tax", "reverse_tax")
         return ()
 

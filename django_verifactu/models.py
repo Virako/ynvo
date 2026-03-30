@@ -31,22 +31,25 @@ class InvoiceRecord(models.Model):
     tax_amount = models.DecimalField(max_digits=12, decimal_places=2)
     tax_breakdown = models.JSONField(default=list)
     fingerprint = models.CharField(max_length=64)
-    previous_fingerprint = models.CharField(
-        max_length=64, blank=True, default=""
-    )
+    previous_fingerprint = models.CharField(max_length=64, blank=True, default="")
     generation_timestamp = models.DateTimeField()
     xml_content = models.TextField(blank=True, default="")
 
     # Amendment / rejection fields
     is_amendment = models.BooleanField(default=False)
-    prior_rejection = models.CharField(
-        max_length=1, blank=True, default=""
-    )
+    prior_rejection = models.CharField(max_length=1, blank=True, default="")
     no_prior_record = models.BooleanField(default=False)
 
     # AEAT response
     status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default="pending"
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="pending",
+        help_text=(
+            "Pending: registered locally (hash + QR generated), not sent to AEAT.<br>"
+            "In No VeriFactu mode this is the normal permanent state.<br>"
+            "Other statuses only apply after automatic submission via submit_to_aeat()."
+        ),
     )
     csv_code = models.CharField(max_length=16, blank=True, default="")
     aeat_response = models.TextField(blank=True, default="")

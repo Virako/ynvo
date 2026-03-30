@@ -19,16 +19,18 @@ REGISTRATION_KWARGS = {
 
 def _expected_registration_hash(**overrides: str) -> str:
     kw = {**REGISTRATION_KWARGS, **overrides}
-    payload = "&".join([
-        f"IDEmisorFactura={kw['issuer_nif']}",
-        f"NumSerieFactura={kw['serial_number']}",
-        f"FechaExpedicionFactura={kw['issue_date']}",
-        f"TipoFactura={kw['invoice_type']}",
-        f"CuotaTotal={kw['tax_amount']}",
-        f"ImporteTotal={kw['total_amount']}",
-        f"Huella={kw['previous_fingerprint']}",
-        f"FechaHoraHusoGenRegistro={kw['generation_timestamp']}",
-    ])
+    payload = "&".join(
+        [
+            f"IDEmisorFactura={kw['issuer_nif']}",
+            f"NumSerieFactura={kw['serial_number']}",
+            f"FechaExpedicionFactura={kw['issue_date']}",
+            f"TipoFactura={kw['invoice_type']}",
+            f"CuotaTotal={kw['tax_amount']}",
+            f"ImporteTotal={kw['total_amount']}",
+            f"Huella={kw['previous_fingerprint']}",
+            f"FechaHoraHusoGenRegistro={kw['generation_timestamp']}",
+        ]
+    )
     return hashlib.sha256(payload.encode("UTF-8")).hexdigest().upper()
 
 
@@ -168,8 +170,7 @@ def test_aeat_cancellation_vector():
         tax_amount="12.35",
         total_amount="123.45",
         previous_fingerprint=(
-            "3C464DAF61ACB827C65FDA19F352A4E3"
-            "BDC2C640E9E9FC4CC058073F38F12F60"
+            "3C464DAF61ACB827C65FDA19F352A4E3BDC2C640E9E9FC4CC058073F38F12F60"
         ),
         generation_timestamp="2024-01-01T19:20:35+01:00",
     )

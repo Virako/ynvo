@@ -15,11 +15,12 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 from ynvo.views import YnvoView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("verifactu/", include("django_verifactu.urls")),
     path("ynvo/<int:year>/<str:number>/", YnvoView.as_view(), name="ynvo_view"),
 ]

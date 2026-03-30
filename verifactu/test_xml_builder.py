@@ -104,9 +104,7 @@ def test_registration_xml_multiple_tax_details():
             tax_amount="20.00",
         ),
     ]
-    xml = build_registration_xml(
-        _sample_invoice(tax_details=details)
-    )
+    xml = build_registration_xml(_sample_invoice(tax_details=details))
     text = xml.decode("UTF-8")
     assert text.count("DetalleDesglose") == 4  # 2 open + 2 close
 
@@ -289,18 +287,14 @@ def test_rectificativa_sustitutiva_valid_against_xsd():
 
 def test_amendment_registration():
     """Alta de subsanación: corrige RF aceptado/con errores."""
-    xml = build_registration_xml(
-        _sample_invoice(is_amendment=True)
-    )
+    xml = build_registration_xml(_sample_invoice(is_amendment=True))
     text = xml.decode("UTF-8")
     assert ">S<" in text
     assert "Subsanacion" in text
 
 
 def test_amendment_registration_valid_against_xsd():
-    xml = build_registration_xml(
-        _sample_invoice(is_amendment=True)
-    )
+    xml = build_registration_xml(_sample_invoice(is_amendment=True))
     errors = validate_xml(xml)
     assert errors == [], f"XSD validation errors: {errors}"
 

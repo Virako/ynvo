@@ -142,6 +142,9 @@ def register_invoice(invoice: Invoice) -> InvoiceRecord:
         qr_url=qr_url,
     )
 
+    record.xml_content = _build_registration_xml(record).decode("UTF-8")
+    record.save(update_fields=["xml_content"])
+
     invoice.invoice_record = record
     invoice.save(update_fields=["invoice_record"])
     return record
