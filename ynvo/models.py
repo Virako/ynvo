@@ -34,6 +34,19 @@ class Client(PersonalData):
     transmitter = models.ForeignKey(
         "ynvo.Transmitter", related_name="clients", on_delete=models.PROTECT, null=True
     )
+    price_per_hour = models.FloatField(null=True, blank=True)
+    discount_percent = models.FloatField(default=0)
+    discount_description = models.CharField(
+        max_length=256,
+        blank=True,
+        default="",
+        help_text="Ej: por volumen de 500 horas",
+    )
+    default_activity = models.CharField(
+        max_length=256,
+        blank=True,
+        default="Trabajos realizados de mantenimiento y actualización del software",
+    )
 
     objects = WriteClientManager()
     read_objects = ReadClientManager()

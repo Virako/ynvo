@@ -1,6 +1,17 @@
 from django import forms
 
-from ynvo.models import Comment, Task, Work
+from ynvo.models import Comment, Invoice, Task, Work
+
+
+class InvoiceAdminForm(forms.ModelForm):
+    hours = forms.FloatField(
+        required=False,
+        help_text="Auto-generate fees from client config",
+    )
+
+    class Meta:
+        model = Invoice
+        fields = "__all__"
 
 
 class TaskAdminForm(forms.ModelForm):

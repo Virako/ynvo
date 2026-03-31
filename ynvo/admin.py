@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 
 from ynvo.filters import ClientFilter, ProjectFilter, TaskFilter
-from ynvo.forms import CommentAdminForm, TaskAdminForm, WorkAdminForm
+from ynvo.forms import CommentAdminForm, InvoiceAdminForm, TaskAdminForm, WorkAdminForm
 from ynvo.models import (
     Client,
     Comment,
@@ -79,8 +79,34 @@ class FeeInline(admin.TabularInline):
     extra = 1
 
 
+def _create_auto_fees(invoice, hours):
+    client = invoice.invo_to
+    if not client.price_per_hour:
+        return
+    Fee.objects.create(
+        invoice=invoice,
+        ftype="hour",
+        activity=client.default_activity,
+        price=client.price_per_hour,
+        amount=hours,
+    )
+    if client.discount_percent > 0:
+        discount_price = -(client.price_per_hour * client.discount_percent / 100)
+        activity = (
+            f"Descuento {client.discount_percent:g}% {client.discount_description}"
+        )
+        Fee.objects.create(
+            invoice=invoice,
+            ftype="hour",
+            activity=activity.strip(),
+            price=discount_price,
+            amount=hours,
+        )
+
+
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
+    form = InvoiceAdminForm
     list_display = (
         "number",
         "proforma",
@@ -136,11 +162,21 @@ class InvoiceAdmin(admin.ModelAdmin):
             return qs
         return qs.filter(invo_from__user=request.user)
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if obj:
+            form.base_fields.pop("hours", None)
+        return form
+
     def save_model(self, request, obj, form, change):
-        if not change:  # only set the transmitter when the object is created
+        if not change:
             transmitter = Transmitter.objects.get(user=request.user)
             obj.invo_from = transmitter
         super().save_model(request, obj, form, change)
+        if not change:
+            hours = form.cleaned_data.get("hours")
+            if hours:
+                _create_auto_fees(obj, hours)
 
 
 class TaskInline(admin.TabularInline):
