@@ -186,6 +186,10 @@ class Fee(models.Model):
     price = models.FloatField()
     amount = models.FloatField(default=1.0)
 
+    @property
+    def total(self):
+        return self.price * self.amount
+
     def __str__(self):
         return f"{self.ftype}: {self.price} x {self.amount}"
 

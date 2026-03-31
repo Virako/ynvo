@@ -6,11 +6,10 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "Django>=5.2,<6",
-    "django-mathfilters>=0.4,<1",
     "qrcode[pil]>=8.0,<9",
     "lxml>=5.0,<6",
     "requests>=2.31,<3",
-    "cryptography>=43.0,<45",
+    "cryptography>=46.0,<47",
 ]
 
 [project.optional-dependencies]

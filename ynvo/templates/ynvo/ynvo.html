@@ -1,5 +1,4 @@
 {% load static %}
-{% load mathfilters %}
 
 
 <!DOCTYPE html>
@@ -61,7 +60,7 @@
                       <td>{{ fee.activity|safe }}</td>
                       <td class="text-right">{{ fee.price|floatformat:2 }}</td>
                       <td class="text-right">{{ fee.amount }}</td>
-                      <td class="text-right">{{ fee.price|mul:fee.amount|floatformat:2 }}</td>
+                      <td class="text-right">{{ fee.total|floatformat:2 }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>
