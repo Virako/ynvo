@@ -433,7 +433,7 @@ dependencies = [
     { name = "requests" },
 ]
 
-[package.optional-dependencies]
+[package.dev-dependencies]
 dev = [
     { name = "django-debug-toolbar" },
     { name = "django-stubs", extra = ["compatible-mypy"] },
@@ -451,21 +451,24 @@ dev = [
 requires-dist = [
     { name = "cryptography", specifier = ">=46.0,<47" },
     { name = "django", specifier = ">=5.2,<6" },
-    { name = "django-debug-toolbar", marker = "extra == 'dev'" },
-    { name = "django-stubs", extras = ["compatible-mypy"], marker = "extra == 'dev'" },
-    { name = "factory-boy", marker = "extra == 'dev'" },
-    { name = "import-linter", marker = "extra == 'dev'" },
     { name = "lxml", specifier = ">=5.0,<6" },
-    { name = "lxml-stubs", marker = "extra == 'dev'" },
-    { name = "mypy", marker = "extra == 'dev'" },
-    { name = "pytest", marker = "extra == 'dev'" },
-    { name = "pytest-cov", marker = "extra == 'dev'" },
-    { name = "pytest-django", marker = "extra == 'dev'" },
     { name = "qrcode", extras = ["pil"], specifier = ">=8.0,<9" },
     { name = "requests", specifier = ">=2.31,<3" },
-    { name = "ruff", marker = "extra == 'dev'" },
 ]
-provides-extras = ["dev"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "django-debug-toolbar" },
+    { name = "django-stubs", extras = ["compatible-mypy"] },
+    { name = "factory-boy" },
+    { name = "import-linter" },
+    { name = "lxml-stubs" },
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "pytest-django" },
+    { name = "ruff" },
+]
 
 [[package]]
 name = "librt"

@@ -12,7 +12,7 @@ dependencies = [
     "cryptography>=46.0,<47",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "pytest",
     "pytest-django",
