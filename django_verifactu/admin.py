@@ -59,4 +59,4 @@ class InvoiceRecordAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
         return False
 
     def get_queryset(self, request):
-        return super().get_queryset(request).for_user(request.user)
+        return super().get_queryset(request).for_user(request.user)  # type: ignore[attr-defined]

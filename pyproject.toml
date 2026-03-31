@@ -21,6 +21,7 @@ dev = [
     "mypy",
     "django-stubs[compatible-mypy]",
     "lxml-stubs",
+    "types-requests",
     "pytest-cov",
     "import-linter",
     "django-debug-toolbar",

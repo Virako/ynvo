@@ -162,7 +162,7 @@ class InvoiceAdmin(admin.ModelAdmin):
             return qs
         return qs.filter(invo_from__user=request.user)
 
-    def get_form(self, request, obj=None, **kwargs):
+    def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         if obj:
             form.base_fields.pop("hours", None)

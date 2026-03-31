@@ -10,6 +10,7 @@ from cryptography.hazmat.primitives.serialization import (
     BestAvailableEncryption,
     Encoding,
     NoEncryption,
+    PrivateFormat,
     pkcs12,
 )
 from lxml import etree
@@ -168,10 +169,11 @@ def pfx_to_pem(pfx_path: str, password: str) -> tuple[str, str]:
         key_file.write(
             private_key.private_bytes(
                 Encoding.PEM,
-                format=BestAvailableEncryption(password.encode("UTF-8"))
+                PrivateFormat.TraditionalOpenSSL,
+                BestAvailableEncryption(password.encode("UTF-8"))
                 if password
                 else NoEncryption(),
-            )  # type: ignore[arg-type]
+            )
         )
 
     return cert_file.name, key_file.name

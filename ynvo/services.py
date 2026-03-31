@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
@@ -71,7 +72,7 @@ def _build_previous(issuer_nif: str) -> PreviousInvoice | None:
     )
 
 
-def _generation_timestamp() -> tuple[str, timezone.datetime]:
+def _generation_timestamp() -> tuple[str, datetime]:
     now = timezone.now()
     return now.strftime("%Y-%m-%dT%H:%M:%S+01:00"), now
 
@@ -244,7 +245,7 @@ def _build_cancellation_xml(record: InvoiceRecord) -> bytes:
         software=software,
         previous=previous,
         no_prior_record=record.no_prior_record,
-        prior_rejection=record.prior_rejection,
+        prior_rejection=bool(record.prior_rejection),
     )
     return build_cancellation_xml(data)
 
