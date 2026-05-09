@@ -19,7 +19,7 @@ dev = [
     "factory-boy",
     "ruff",
     "mypy",
-    "django-stubs[compatible-mypy]",
+    "django>=5.2.14,<6",
     "lxml-stubs",
     "types-requests",
     "pytest-cov",
