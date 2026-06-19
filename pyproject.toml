@@ -9,7 +9,7 @@ dependencies = [
     "qrcode[pil]>=8.0,<9",
     "lxml>=5.0,<6",
     "requests>=2.31,<3",
-    "cryptography>=46.0,<47",
+    "cryptography>=48.0.1,<49",
 ]
 
 [dependency-groups]
